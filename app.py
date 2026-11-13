@@ -1,6 +1,44 @@
-import streamlit as st
-import hmac
+"""Arabic RTL UI. Offline: no network connections, no Google, no files linked."""
 
+from __future__ import annotations
+
+# Standard Library
+import os
+import hmac
+import secrets
+from datetime import date, timedelta
+from pathlib import Path
+
+# Third-party Libraries
+import pandas as pd
+import streamlit as st
+
+# Befrienders Modules
+from befrienders_tester.model import Settings, dump_operations
+from befrienders_tester.generator import generate
+from befrienders_tester.validation import validate
+from befrienders_tester.exporter import (
+    csv_bytes,
+    excel_bytes,
+    report_bytes,
+    visit_record,
+)
+from befrienders_tester.training_export import training_excel_bytes
+from befrienders_tester.roster import read_roster
+from befrienders_tester.registry import (
+    DuplicateCodes,
+    Registry,
+    filter_registered,
+)
+from befrienders_tester.rules import (
+    OUTREACH_NAMES,
+    SYRINGE_MAX_DEFAULT,
+    SYRINGE_MIN_DEFAULT,
+    SYRINGE_STEP,
+)
+
+
+# Authentication
 def check_login():
     if st.session_state.get("authenticated", False):
         return
@@ -29,26 +67,23 @@ def check_login():
     st.stop()
 
 
+# Require login before loading the application
 check_login()
 
-# باقي كود البرنامج يبدأ هنا
-"""Arabic RTL UI. Offline: no network connections, no Google, no files linked."""
-from __future__ import annotations
-import os
-import secrets
-from datetime import date, timedelta
-from pathlib import Path
 
-import pandas as pd
-import streamlit as st
-from befrienders_tester.model import Settings, dump_operations
-from befrienders_tester.generator import generate
-from befrienders_tester.validation import validate
-from befrienders_tester.exporter import csv_bytes, excel_bytes, report_bytes, visit_record
-from befrienders_tester.training_export import training_excel_bytes
-from befrienders_tester.roster import read_roster
-from befrienders_tester.registry import DuplicateCodes, Registry, filter_registered
-from befrienders_tester.rules import OUTREACH_NAMES, SYRINGE_MAX_DEFAULT, SYRINGE_MIN_DEFAULT, SYRINGE_STEP
+# Application Configuration
+COL_DATE, COL_OUTREACH, COL_AREA = (
+    'التاريخ',
+    'المندوب',
+    'المنطقة',
+)
+
+REGISTRY_PATH = Path(
+    os.environ.get('BEFRIENDERS_REGISTRY')
+    or Path(__file__).resolve().parent / 'registry' / 'codes_registry.sqlite'
+)
+
+registry = Registry(REGISTRY_PATH)
 
 COL_DATE, COL_OUTREACH, COL_AREA = 'التاريخ', 'المندوب', 'المنطقة'
 REGISTRY_PATH = Path(os.environ.get('BEFRIENDERS_REGISTRY') or Path(__file__).resolve().parent / 'registry' / 'codes_registry.sqlite')
