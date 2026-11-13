@@ -1,3 +1,37 @@
+import streamlit as st
+import hmac
+
+def check_login():
+    if st.session_state.get("authenticated", False):
+        return
+
+    st.title("تسجيل الدخول")
+
+    with st.form("login_form"):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        login = st.form_submit_button("Login")
+
+    if login:
+        valid_user = hmac.compare_digest(
+            username, st.secrets["auth"]["username"]
+        )
+        valid_pass = hmac.compare_digest(
+            password, st.secrets["auth"]["password"]
+        )
+
+        if valid_user and valid_pass:
+            st.session_state["authenticated"] = True
+            st.rerun()
+        else:
+            st.error("اسم المستخدم أو كلمة المرور غير صحيحة")
+
+    st.stop()
+
+
+check_login()
+
+# باقي كود البرنامج يبدأ هنا
 """Arabic RTL UI. Offline: no network connections, no Google, no files linked."""
 from __future__ import annotations
 import os
