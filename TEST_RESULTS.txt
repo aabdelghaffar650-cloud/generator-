@@ -1,0 +1,4 @@
+Befrienders Data Generator v0.5
+84 unit tests passed (local only; no network)
+Command: python -m unittest discover -s tests -v
+Covers: code derivation, ages 18-50, roster import, gender column, code registry, day schedule (table + multiselect), per-visit maximums for syringes/condoms/lubricants, syringes multiples of 30, condoms even (multiples of 2) with lubricant = 2x condoms, optional people counts, seed, exports, UI flow.
