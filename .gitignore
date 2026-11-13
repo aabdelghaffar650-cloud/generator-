@@ -3,10 +3,8 @@ __pycache__/
 .pytest_cache/
 .pilot_auth/
 runtime/
-*.sqlite
 *.db
 *credentials*.json
 *token*.json
 google_oauth_client.json
 .streamlit/secrets.toml
-registry/
